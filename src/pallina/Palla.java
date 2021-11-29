@@ -4,31 +4,34 @@ import java.awt.Color;
 
 public class Palla {
 	private int posX,posY;
+	
 	private double velX,velY;
-	private int arrotondito;
+	private int raggio;
 	private Color c;
 
 
-	public Palla(int posX, int posY, Color c, int arrotondito) {
+	public Palla(int posX, int posY, Color c, int raggio) {
 		super();
 		this.posX = posX;
 		this.posY = posY;
 		this.c = c;
-		this.arrotondito = arrotondito;
+		this.raggio = raggio;
 	}
 	
 	public void updatePosition(double time){
 		posX +=velX*time;
 		posY +=velY*time;
 		
+		velY -= 0.25;
+
 	}
 
-	public int getArrotondito() {
-		return arrotondito;
+	public int getRaggio() {
+		return raggio;
 	}
 
-	public void setArrotondito(int arrotondito) {
-		this.arrotondito = arrotondito;
+	public void setRaggio(int raggio) {
+		this.raggio = raggio;
 	}
 
 	public int getPosX() {
@@ -71,12 +74,12 @@ public class Palla {
 	}
 
 
-	public Color getC() {
+	public Color getColor() {
 		return c;
 	}
 
 
-	public void setC(Color c) {
+	public void setColor(Color c) {
 		this.c = c;
 	}
 	
