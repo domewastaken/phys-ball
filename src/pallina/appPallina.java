@@ -19,15 +19,20 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import javax.swing.JScrollBar;
+import javax.swing.ImageIcon;
 
 public class appPallina {
 
 	private JFrame frmGravit;
 	private int speed;
-	private JSlider Jspeedd;
-	private JLabel veloci;
 	private String[] hexColori = { "#FF0000","#FFFF00","#0000FF","#654321","#000000","#800080","#00FF00","#FF00FF"};
 	private String[] arrColori = {"Rosso", "Giallo", "Blu", "Marrone", "Nero", "Viola", "Verde", "Rosa"};
+	private String[] arrPianeti = {"Terra", "Luna", "Marte", "Giove"};
+	private double[] arrGravita = {9.81, 1.62, 3.72, 24.79};
+	private int gigio;
 	/**
 	 * Launch the application.
 	 */
@@ -62,49 +67,100 @@ public class appPallina {
 		Schermo panel = new Schermo(speed);
 		panel.setBounds(10, 11, 511, 446);
 		frmGravit.getContentPane().add(panel);
-	
-		
-		
-		JLabel lblVelocit = new JLabel("Velocit\u00E0 : ");
-		lblVelocit.setBounds(561, 80, 76, 20);
-		lblVelocit.setHorizontalAlignment(SwingConstants.CENTER);
-		lblVelocit.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		frmGravit.getContentPane().add(lblVelocit);
-		
-		Jspeedd = new JSlider();
-		Jspeedd.setBounds(523, 129, 200, 26);
-		Jspeedd.setMaximum(10);
-		Jspeedd.setMinimum(-10);
-		frmGravit.getContentPane().add(Jspeedd);
-		Jspeedd.setValue(speed);
-		
-		veloci = new JLabel("");
-		veloci.setBounds(647, 83, 46, 14);
-		frmGravit.getContentPane().add(veloci);
-		veloci.setText(speed+"");
 		
 		JCheckBox Gravit = new JCheckBox("gravit\u00E0");
-		Gravit.setBounds(543, 220, 97, 23);
+		Gravit.setBounds(536, 193, 97, 23);
 		frmGravit.getContentPane().add(Gravit);
 		
-		JComboBox cmbColore = new JComboBox();
-
+		JComboBox<String> cmbColore = new JComboBox<String>(arrColori);
 		
-		cmbColore.setModel(new DefaultComboBoxModel(arrColori));
-		
-		cmbColore.setBounds(543, 317, 140, 32);
+		cmbColore.setBounds(539, 140, 140, 32);
 		frmGravit.getContentPane().add(cmbColore);
 		
-		JLabel lblSelezionaIlColore = new JLabel("Seleziona il colore");
+		JLabel lblSelezionaIlColore = new JLabel("Seleziona il colore:");
 		lblSelezionaIlColore.setHorizontalAlignment(SwingConstants.LEFT);
-		lblSelezionaIlColore.setBounds(543, 292, 140, 14);
+		lblSelezionaIlColore.setBounds(539, 114, 140, 14);
 		frmGravit.getContentPane().add(lblSelezionaIlColore);
-	
+		
+		JLabel lblVelxPallina = new JLabel("Vel-X pallina : ");
+		lblVelxPallina.setBounds(539, 40, 94, 20);
+		frmGravit.getContentPane().add(lblVelxPallina);
+		
+		JLabel lblVelyPallina = new JLabel("Vel-Y pallina : ");
+		lblVelyPallina.setBounds(539, 66, 94, 20);
+		frmGravit.getContentPane().add(lblVelyPallina);
+		
+		JLabel ScVelX = new JLabel("");
+		ScVelX.setBounds(633, 46, 46, 14);
+		frmGravit.getContentPane().add(ScVelX);
+		
+		JLabel ScVelY = new JLabel("");
+		ScVelY.setBounds(633, 66, 46, 14);
+		frmGravit.getContentPane().add(ScVelY);
+		
+		JButton btnReset = new JButton("reset");
+		btnReset.setBounds(633, 416, 89, 23);
+		frmGravit.getContentPane().add(btnReset);
+		
+		JLabel PlayPausa = new JLabel("");
+		
+		panel.setGravity(9.81); //gravità iniziale ovvero la Terra
+		
+		PlayPausa.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(gigio == 0) {
+
+					gigio = 1;
+					panel.setPlay(true);
+					
+				PlayPausa.setIcon(new ImageIcon("src/pauseButton.png"));
+				}else {
+					gigio = 0;
+					panel.setPlay(false);
+					PlayPausa.setIcon(new ImageIcon("src/playButton.png"));
+				}
+				
+			}
+		});
+		
+		PlayPausa.setHorizontalAlignment(SwingConstants.CENTER);
+		PlayPausa.setIcon(new ImageIcon("src/playButton.png"));
+		PlayPausa.setBounds(543, 393, 72, 64);
+		
+		frmGravit.getContentPane().add(PlayPausa);
+		
+		JComboBox<String> cmbPianeti = new JComboBox<String>(arrPianeti);
+		
+		cmbPianeti.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			panel.setGravity(arrGravita[cmbPianeti.getSelectedIndex()]);
+			
+			}
+		});
+		
+		cmbPianeti.setBounds(539, 261, 143, 25);
+		frmGravit.getContentPane().add(cmbPianeti);
+		
+		JLabel lblPianeti = new JLabel("Seleziona il pianeta:");
+		lblPianeti.setBounds(539, 233, 140, 16);
+		frmGravit.getContentPane().add(lblPianeti);
+		
+		btnReset.addActionListener(e->{
+			panel.reset();
+		});
+		
 		cmbColore.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				panel.getPalla().setColor(Color.decode(hexColori[cmbColore.getSelectedIndex()]));
 				
 			}
+		});
+		
+		Gravit.addActionListener(e->{
+					
+			panel.setGravity( Gravit.isSelected());
+					
 		});
 		
 		Timer t = new Timer();
@@ -113,12 +169,13 @@ public class appPallina {
 			
 			@Override
 			public void run() {
-				veloci.setText(Jspeedd.getValue()+"");
-				panel.akinaSpeed((int)Jspeedd.getValue());
+				
+				ScVelX.setText(panel.getPalla().getVelX()+"");
+				ScVelY.setText(panel.getPalla().getVelY()+"");
 				panel.repaint();
 				
 			}
-		}, 1, 1);
+		}, 1, 10);
 	
 		}
 }
